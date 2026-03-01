@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Zinvolt P1 Meter",
+        "description": "Enter the IP address of your Zinvolt P1 Meter.",
+        "data": {
+          "host": "IP Address"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to the Zinvolt P1 Meter. Please check the IP address and ensure the device is online.",
+      "invalid_response": "The device responded but the data format is not recognized as a Zinvolt P1 Meter.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This Zinvolt P1 Meter is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "serial_number": { "name": "Serial number" },
+      "device_type": { "name": "Device type" },
+      "device_model": { "name": "Device model" },
+      "meter_version": { "name": "Meter version" },
+      "total_power": { "name": "Total power" },
+      "phase_a_power": { "name": "Phase A power" },
+      "phase_b_power": { "name": "Phase B power" },
+      "phase_c_power": { "name": "Phase C power" },
+      "phase_a_voltage": { "name": "Phase A voltage" },
+      "phase_b_voltage": { "name": "Phase B voltage" },
+      "phase_c_voltage": { "name": "Phase C voltage" },
+      "phase_a_current": { "name": "Phase A current" },
+      "phase_b_current": { "name": "Phase B current" },
+      "phase_c_current": { "name": "Phase C current" },
+      "positive_total_energy": { "name": "Total energy consumed" },
+      "reverse_total_energy": { "name": "Total energy returned" },
+      "off_peak_positive_energy": { "name": "Off-peak energy consumed" },
+      "flat_section_positive_energy": { "name": "Flat-rate energy consumed" },
+      "off_peak_reverse_energy": { "name": "Off-peak energy returned" },
+      "flat_section_reverse_energy": { "name": "Flat-rate energy returned" }
+    }
+  }
+}
