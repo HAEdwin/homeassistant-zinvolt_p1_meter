@@ -1,0 +1,12 @@
+{
+  "domain": "zinvolt_p1_meter",
+  "name": "Zinvolt P1 Meter",
+  "codeowners": ["@HAEdwin"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/HAEdwin/homeassistant-zinvolt_p1_meter",
+  "issue_tracker": "https://github.com/HAEdwin/homeassistant-zinvolt_p1_meter/issues",
+  "iot_class": "local_polling",
+  "requirements": ["aiohttp"],
+  "version": "1.0.0"
+}
