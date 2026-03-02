@@ -48,14 +48,14 @@ SENSOR_DESCRIPTIONS: tuple[ZinvoltSensorEntityDescription, ...] = (
         translation_key="device_type",
         name="Device type",
         value_key="type",
-        entity_registry_enabled_default=True,
+        entity_registry_enabled_default=False,
     ),
     ZinvoltSensorEntityDescription(
         key="device_model",
         translation_key="device_model",
         name="Device model",
         value_key="model",
-        entity_registry_enabled_default=True,
+        entity_registry_enabled_default=False,
     ),
     ZinvoltSensorEntityDescription(
         key="meter_version",
@@ -109,6 +109,7 @@ SENSOR_DESCRIPTIONS: tuple[ZinvoltSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
         value_key="la_voltage",
     ),
     ZinvoltSensorEntityDescription(
@@ -118,6 +119,7 @@ SENSOR_DESCRIPTIONS: tuple[ZinvoltSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
         value_key="lb_voltage",
     ),
     ZinvoltSensorEntityDescription(
@@ -127,6 +129,7 @@ SENSOR_DESCRIPTIONS: tuple[ZinvoltSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
         value_key="lc_voltage",
     ),
     # ── Current sensors (A) ─────────────────────────────────────────────
