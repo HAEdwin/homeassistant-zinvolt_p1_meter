@@ -9,7 +9,7 @@ Custom [Home Assistant](https://www.home-assistant.io/) integration for the **Zi
 - **Local polling** – communicates directly with the meter on your LAN; no cloud dependency.
 - **Config flow** – set up via the Home Assistant UI (Settings → Devices & Services → Add Integration).
 - **Automatic device discovery** – identifies the meter by its serial number and prevents duplicate entries.
-- **20 sensor entities** covering:
+- **18 sensor entities** covering:
 
 | Category | Sensors |
 |---|---|
@@ -18,7 +18,7 @@ Custom [Home Assistant](https://www.home-assistant.io/) integration for the **Zi
 | **Current** (A) | Phase A / B / C current |
 | **Energy consumed** (kWh) | Total, Off-peak, Flat-rate |
 | **Energy returned** (kWh) | Total, Off-peak, Flat-rate |
-| **Device info** | Serial number, Device type, Device model, Meter version |
+| **Device info** | Device type, Device model (serial number and firmware version are shown in the device registry) |
 
 - **Energy Dashboard ready** – energy sensors use `total_increasing` state class, so they can be added to the Home Assistant Energy dashboard out of the box.
 - **Fast update interval** – data is polled every 2 seconds by default.
@@ -62,6 +62,10 @@ The integration will verify connectivity, read the device serial number, and cre
 | *Unable to connect* | Verify the IP address is correct and the meter is powered on and reachable. |
 | *Invalid response* | The device responded but returned unexpected data — make sure it is a Zinvolt P1 Meter. |
 | *Already configured* | A meter with the same serial number is already set up. Remove or reconfigure the existing entry first. |
+
+## License
+
+See [LICENSE](LICENSE) for details.
 
 ## Contributing
 
