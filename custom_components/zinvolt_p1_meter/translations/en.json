@@ -20,10 +20,8 @@
   },
   "entity": {
     "sensor": {
-      "serial_number": { "name": "Serial number" },
       "device_type": { "name": "Device type" },
       "device_model": { "name": "Device model" },
-      "meter_version": { "name": "Meter version" },
       "total_power": { "name": "Total power" },
       "phase_a_power": { "name": "Phase A power" },
       "phase_b_power": { "name": "Phase B power" },
