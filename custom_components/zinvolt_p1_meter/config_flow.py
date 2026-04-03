@@ -64,6 +64,8 @@ class ZinvoltP1MeterConfigFlow(ConfigFlow, domain=DOMAIN):
 
             except (aiohttp.ClientError, TimeoutError):
                 errors["base"] = "cannot_connect"
+            except ValueError:
+                errors["base"] = "invalid_response"
             except Exception:
                 _LOGGER.exception("Unexpected exception during config flow")
                 errors["base"] = "unknown"

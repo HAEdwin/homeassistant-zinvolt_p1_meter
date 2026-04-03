@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import CONF_HOST, DEFAULT_PORT, DEFAULT_SCAN_INTERVAL, DOMAIN
 
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -24,8 +25,7 @@ class ZinvoltP1Coordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         """Initialize the coordinator."""
-        self.host: str = entry.data[CONF_HOST]
-        self.url = f"http://{self.host}:{DEFAULT_PORT}"
+        self.url = f"http://{entry.data[CONF_HOST]}:{DEFAULT_PORT}"
         self._session = async_get_clientsession(hass)
 
         super().__init__(
@@ -69,6 +69,4 @@ class ZinvoltP1Coordinator(DataUpdateCoordinator[dict[str, Any]]):
     @property
     def serial_number(self) -> str | None:
         """Return the serial number of the device."""
-        if self.data:
-            return self.data.get("sn")
-        return None
+        return self.data.get("sn") if self.data else None
