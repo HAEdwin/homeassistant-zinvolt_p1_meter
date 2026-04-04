@@ -20,12 +20,12 @@ Custom [Home Assistant](https://www.home-assistant.io/) integration for the **Zi
 | **Energy returned** (kWh) | Total, Off-peak, Flat-rate |
 | **Device info** | Device type, Device model (serial number and firmware version are shown in the device registry) |
 
-- **Energy Dashboard ready** – energy sensors use `total_increasing` state class, so they can be added to the Home Assistant Energy dashboard out of the box.
+- **Energy Dashboard ready** – energy sensors use `total_increasing` state class, they can be added to the Home Assistant Energy dashboard.
 - **Fast update interval** – data is polled every 2 seconds by default.
 
 ## Requirements
 
-- A **Zinvolt P1-dongle pro** accessible on your local network.
+- A **Zinvolt P1-dongle pro** accessible on your local network by Home Assistant.
 - **Home Assistant 2024.1** or newer.
 <img src="https://github.com/HAEdwin/homeassistant-zinvolt_p1_meter/blob/main/Zinvolt P1-dongle pro.PNG?raw=true">
 
