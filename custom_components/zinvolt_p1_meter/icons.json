@@ -1,0 +1,60 @@
+{
+  "entity": {
+    "sensor": {
+      "device_type": {
+        "default": "mdi:chip"
+      },
+      "device_model": {
+        "default": "mdi:identifier"
+      },
+      "total_power": {
+        "default": "mdi:lightning-bolt"
+      },
+      "phase_a_power": {
+        "default": "mdi:lightning-bolt-circle"
+      },
+      "phase_b_power": {
+        "default": "mdi:lightning-bolt-circle"
+      },
+      "phase_c_power": {
+        "default": "mdi:lightning-bolt-circle"
+      },
+      "phase_a_voltage": {
+        "default": "mdi:sine-wave"
+      },
+      "phase_b_voltage": {
+        "default": "mdi:sine-wave"
+      },
+      "phase_c_voltage": {
+        "default": "mdi:sine-wave"
+      },
+      "phase_a_current": {
+        "default": "mdi:current-ac"
+      },
+      "phase_b_current": {
+        "default": "mdi:current-ac"
+      },
+      "phase_c_current": {
+        "default": "mdi:current-ac"
+      },
+      "positive_total_energy": {
+        "default": "mdi:transmission-tower-import"
+      },
+      "reverse_total_energy": {
+        "default": "mdi:transmission-tower-export"
+      },
+      "off_peak_positive_energy": {
+        "default": "mdi:transmission-tower-import"
+      },
+      "flat_section_positive_energy": {
+        "default": "mdi:transmission-tower-import"
+      },
+      "off_peak_reverse_energy": {
+        "default": "mdi:transmission-tower-export"
+      },
+      "flat_section_reverse_energy": {
+        "default": "mdi:transmission-tower-export"
+      }
+    }
+  }
+}
