@@ -1,7 +1,7 @@
 {
   "name": "Zinvolt P1-dongle Pro",
   "content_in_root": false,
-  "filename": "zinvolt_P1-dongle_Pro",
+  "filename": "Zinvolt_P1-dongle_Pro",
   "country": [],
   "homeassistant": "2026.1.0",
   "render_readme": true
