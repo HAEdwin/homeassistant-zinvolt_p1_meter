@@ -1,4 +1,4 @@
-"""Config flow for Zinvolt P1-dongle Pro integration."""
+"""Config flow for Zinvolt P1 Meter integration."""
 
 from __future__ import annotations
 
@@ -9,13 +9,11 @@ import aiohttp
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DEFAULT_PORT, DOMAIN
+from .const import CONF_HOST, DEFAULT_PORT, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-_TIMEOUT = aiohttp.ClientTimeout(total=10)
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
@@ -24,8 +22,8 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 )
 
 
-class ZinvoltP1DongleProConfigFlow(ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Zinvolt P1-dongle Pro."""
+class ZinvoltP1MeterConfigFlow(ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Zinvolt P1 Meter."""
 
     VERSION = 1
 
@@ -45,7 +43,9 @@ class ZinvoltP1DongleProConfigFlow(ConfigFlow, domain=DOMAIN):
             try:
                 session = async_get_clientsession(self.hass)
                 url = f"http://{host}:{DEFAULT_PORT}"
-                async with session.get(url, timeout=_TIMEOUT) as resp:
+                async with session.get(
+                    url, timeout=aiohttp.ClientTimeout(total=10)
+                ) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
 
@@ -58,7 +58,7 @@ class ZinvoltP1DongleProConfigFlow(ConfigFlow, domain=DOMAIN):
                     self._abort_if_unique_id_configured()
 
                     return self.async_create_entry(
-                        title=f"Zinvolt P1-dongle Pro ({serial})",
+                        title=f"Zinvolt P1 Meter ({serial})",
                         data={CONF_HOST: host},
                     )
 
@@ -66,52 +66,12 @@ class ZinvoltP1DongleProConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
             except ValueError:
                 errors["base"] = "invalid_response"
-            except Exception:  # noqa: BLE001
+            except Exception:
                 _LOGGER.exception("Unexpected exception during config flow")
                 errors["base"] = "unknown"
 
         return self.async_show_form(
             step_id="user",
             data_schema=STEP_USER_DATA_SCHEMA,
-            errors=errors,
-        )
-
-    async def async_step_reconfigure(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Allow the user to update the IP address without re-adding the entry."""
-        errors: dict[str, str] = {}
-        reconfigure_entry = self._get_reconfigure_entry()
-
-        if user_input is not None:
-            host = user_input[CONF_HOST].strip()
-            try:
-                session = async_get_clientsession(self.hass)
-                url = f"http://{host}:{DEFAULT_PORT}"
-                async with session.get(url, timeout=_TIMEOUT) as resp:
-                    resp.raise_for_status()
-                    data = await resp.json(content_type=None)
-
-                if "device" not in data or "status" not in data.get("device", {}):
-                    errors["base"] = "invalid_response"
-                else:
-                    return self.async_update_reload_and_abort(
-                        reconfigure_entry,
-                        data_updates={CONF_HOST: host},
-                    )
-
-            except (aiohttp.ClientError, TimeoutError):
-                errors["base"] = "cannot_connect"
-            except ValueError:
-                errors["base"] = "invalid_response"
-            except Exception:  # noqa: BLE001
-                _LOGGER.exception("Unexpected exception during reconfigure flow")
-                errors["base"] = "unknown"
-
-        return self.async_show_form(
-            step_id="reconfigure",
-            data_schema=vol.Schema(
-                {vol.Required(CONF_HOST, default=reconfigure_entry.data[CONF_HOST]): str}
-            ),
             errors=errors,
         )

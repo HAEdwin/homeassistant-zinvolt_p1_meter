@@ -1,4 +1,4 @@
-"""Sensor platform for the Zinvolt P1-dongle Pro integration."""
+"""Sensor platform for the Zinvolt P1 Meter integration."""
 
 from __future__ import annotations
 
@@ -13,7 +13,6 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    EntityCategory,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
     UnitOfEnergy,
@@ -27,110 +26,176 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 from .coordinator import ZinvoltP1Coordinator
 
-# No parallel HTTP calls are ever made from entities.
-PARALLEL_UPDATES = 0
-
 
 @dataclass(frozen=True, kw_only=True)
 class ZinvoltSensorEntityDescription(SensorEntityDescription):
-    """Describe a Zinvolt P1-dongle Pro sensor."""
+    """Describe a Zinvolt P1 Meter sensor."""
 
     value_key: str
 
-    def __post_init__(self) -> None:
-        """Default translation_key to key."""
-        if self.translation_key is None:
-            object.__setattr__(self, "translation_key", self.key)
-
-
-# ── Helpers to reduce phase-sensor repetition ───────────────────────────
-
-_PHASES = (("a", "la", True), ("b", "lb", False), ("c", "lc", False))
-
-
-def _phase_descriptions(
-    measurement: str,
-    unit: str,
-    device_class: SensorDeviceClass,
-    *,
-    all_disabled: bool = False,
-) -> tuple[ZinvoltSensorEntityDescription, ...]:
-    """Generate Phase A / B / C sensor descriptions for a measurement."""
-    return tuple(
-        ZinvoltSensorEntityDescription(
-            key=f"phase_{letter}_{measurement}",
-            native_unit_of_measurement=unit,
-            device_class=device_class,
-            state_class=SensorStateClass.MEASUREMENT,
-            entity_registry_enabled_default=False if all_disabled else enabled,
-            value_key=f"{prefix}_{measurement}",
-        )
-        for letter, prefix, enabled in _PHASES
-    )
-
-
-_ENERGY_KEYS: tuple[tuple[str, str], ...] = (
-    ("positive_total_energy", "Positive_total_electric"),
-    ("reverse_total_energy", "Reverse_total_electric"),
-    ("off_peak_positive_energy", "Off_peak_Positive_electric"),
-    ("flat_section_positive_energy", "Flat_section_Positive_electric"),
-    ("off_peak_reverse_energy", "Off_peak_Reverse_electric"),
-    ("flat_section_reverse_energy", "Flat_section_Reverse_electric"),
-)
 
 SENSOR_DESCRIPTIONS: tuple[ZinvoltSensorEntityDescription, ...] = (
     # ── Device info sensors (diagnostic) ────────────────────────────────
     ZinvoltSensorEntityDescription(
         key="device_type",
+        translation_key="device_type",
         value_key="type",
-        entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
     ZinvoltSensorEntityDescription(
         key="device_model",
+        translation_key="device_model",
         value_key="model",
-        entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
-    # ── Total power (W) ─────────────────────────────────────────────────
+    # ── Power sensors (W) ───────────────────────────────────────────────
     ZinvoltSensorEntityDescription(
         key="total_power",
+        translation_key="total_power",
         native_unit_of_measurement=UnitOfPower.WATT,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
         value_key="total_power",
     ),
-    # ── Per-phase power / voltage / current ─────────────────────────────
-    *_phase_descriptions("power", UnitOfPower.WATT, SensorDeviceClass.POWER),
-    *_phase_descriptions(
-        "voltage",
-        UnitOfElectricPotential.VOLT,
-        SensorDeviceClass.VOLTAGE,
-        all_disabled=True,
+    ZinvoltSensorEntityDescription(
+        key="phase_a_power",
+        translation_key="phase_a_power",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_key="la_power",
     ),
-    *_phase_descriptions(
-        "current", UnitOfElectricCurrent.AMPERE, SensorDeviceClass.CURRENT
+    ZinvoltSensorEntityDescription(
+        key="phase_b_power",
+        translation_key="phase_b_power",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="lb_power",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="phase_c_power",
+        translation_key="phase_c_power",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="lc_power",
+    ),
+    # ── Voltage sensors (V) ─────────────────────────────────────────────
+    ZinvoltSensorEntityDescription(
+        key="phase_a_voltage",
+        translation_key="phase_a_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="la_voltage",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="phase_b_voltage",
+        translation_key="phase_b_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="lb_voltage",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="phase_c_voltage",
+        translation_key="phase_c_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="lc_voltage",
+    ),
+    # ── Current sensors (A) ─────────────────────────────────────────────
+    ZinvoltSensorEntityDescription(
+        key="phase_a_current",
+        translation_key="phase_a_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_key="la_current",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="phase_b_current",
+        translation_key="phase_b_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="lb_current",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="phase_c_current",
+        translation_key="phase_c_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+        value_key="lc_current",
     ),
     # ── Energy sensors (kWh) – total increasing ─────────────────────────
-    *(
-        ZinvoltSensorEntityDescription(
-            key=key,
-            native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-            device_class=SensorDeviceClass.ENERGY,
-            state_class=SensorStateClass.TOTAL_INCREASING,
-            value_key=value_key,
-        )
-        for key, value_key in _ENERGY_KEYS
+    ZinvoltSensorEntityDescription(
+        key="positive_total_energy",
+        translation_key="positive_total_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_key="Positive_total_electric",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="reverse_total_energy",
+        translation_key="reverse_total_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_key="Reverse_total_electric",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="off_peak_positive_energy",
+        translation_key="off_peak_positive_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_key="Off_peak_Positive_electric",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="flat_section_positive_energy",
+        translation_key="flat_section_positive_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_key="Flat_section_Positive_electric",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="off_peak_reverse_energy",
+        translation_key="off_peak_reverse_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_key="Off_peak_Reverse_electric",
+    ),
+    ZinvoltSensorEntityDescription(
+        key="flat_section_reverse_energy",
+        translation_key="flat_section_reverse_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_key="Flat_section_Reverse_electric",
     ),
 )
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,  # noqa: ARG001
+    hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Zinvolt P1-dongle Pro sensor entities."""
+    """Set up Zinvolt P1 Meter sensor entities."""
     coordinator: ZinvoltP1Coordinator = entry.runtime_data
 
     async_add_entities(
@@ -140,7 +205,7 @@ async def async_setup_entry(
 
 
 class ZinvoltP1SensorEntity(CoordinatorEntity[ZinvoltP1Coordinator], SensorEntity):
-    """Representation of a Zinvolt P1-dongle Pro sensor."""
+    """Representation of a Zinvolt P1 Meter sensor."""
 
     entity_description: ZinvoltSensorEntityDescription
     _attr_has_entity_name = True
@@ -158,9 +223,9 @@ class ZinvoltP1SensorEntity(CoordinatorEntity[ZinvoltP1Coordinator], SensorEntit
         self._attr_unique_id = f"{serial}_{description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, serial)},
-            name=f"Zinvolt P1-dongle Pro ({serial})",
+            name=f"Zinvolt P1 Meter ({serial})",
             manufacturer="Zinvolt",
-            model="P1-dongle Pro",
+            model="P1 Meter",
             sw_version=(coordinator.data or {}).get("Meter_version"),
             serial_number=serial,
             configuration_url=coordinator.url,
