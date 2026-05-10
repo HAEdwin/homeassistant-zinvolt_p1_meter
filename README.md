@@ -2,7 +2,7 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 
-Custom [Home Assistant](https://www.home-assistant.io/) integration for the **Zinvolt P1 Meter**, providing real-time energy monitoring over your local network.
+Custom [Home Assistant](https://www.home-assistant.io/) integration for the **Zinvolt P1 Dongle Pro**, providing real-time energy monitoring over your local network.
 
 ## Features
 
