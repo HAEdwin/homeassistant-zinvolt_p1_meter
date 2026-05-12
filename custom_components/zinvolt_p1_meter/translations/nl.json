@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Zinvolt P1-meter",
+        "description": "Voer het IP-adres in van uw Zinvolt P1-meter.",
+        "data": {
+          "host": "IP-adres"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan geen verbinding maken met de Zinvolt P1-meter. Controleer het IP-adres en zorg dat het apparaat online is.",
+      "invalid_response": "Het apparaat heeft gereageerd, maar het gegevensformaat wordt niet herkend als een Zinvolt P1-meter.",
+      "unknown": "Er is een onverwachte fout opgetreden."
+    },
+    "abort": {
+      "already_configured": "Deze Zinvolt P1-meter is al geconfigureerd."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "device_type": { "name": "Apparaattype" },
+      "device_model": { "name": "Apparaatmodel" },
+      "total_power": { "name": "Totaal vermogen" },
+      "phase_a_power": { "name": "Vermogen fase A" },
+      "phase_b_power": { "name": "Vermogen fase B" },
+      "phase_c_power": { "name": "Vermogen fase C" },
+      "phase_a_voltage": { "name": "Spanning fase A" },
+      "phase_b_voltage": { "name": "Spanning fase B" },
+      "phase_c_voltage": { "name": "Spanning fase C" },
+      "phase_a_current": { "name": "Stroom fase A" },
+      "phase_b_current": { "name": "Stroom fase B" },
+      "phase_c_current": { "name": "Stroom fase C" },
+      "positive_total_energy": { "name": "Totaal verbruikte energie" },
+      "reverse_total_energy": { "name": "Totaal teruggeleverde energie" },
+      "off_peak_positive_energy": { "name": "Verbruikte energie dal" },
+      "flat_section_positive_energy": { "name": "Verbruikte energie normaal" },
+      "off_peak_reverse_energy": { "name": "Teruggeleverde energie dal" },
+      "flat_section_reverse_energy": { "name": "Teruggeleverde energie normaal" }
+    }
+  }
+}
