@@ -1,6 +1,7 @@
 {
   "domain": "zinvolt_p1_meter",
   "name": "Zinvolt P1 Meter",
+  "categories": ["energy.meters_monitoring"],
   "codeowners": ["@HAEdwin"],
   "config_flow": true,
   "dependencies": [],
